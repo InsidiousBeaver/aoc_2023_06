@@ -19,6 +19,27 @@ fn main() {
     let mut part2_result = 1;
     part2_result *= calculate_race(races_2[0]).len();
     println!("part2 result: {}", part2_result);
+    let quadratic_result = calc_with_quadratic_eq(races_2[0]);
+    println!("quadratic result: {}", quadratic_result);
+}
+fn calc_with_quadratic_eq(r: Race) -> u64 {
+    // quadratic equation: d=ct*(t-ct) where d-distance,ct-charge time, t-race time
+    // if ct^2 -t*ct+d=0
+    // t = (t+-sqrt(t^2-4*d))/2
+    let d = r.distance as f64;
+    let t = r.time as f64;
+    let discriminant = t * t - 4.0 * d;
+    if discriminant <= 0.0 {
+        return 0; //no solutions
+    }
+    let s = discriminant.sqrt();
+    let start = (((t - s) / 2.0).floor() + 0.001) as u64 + 1;
+    let end = (((t + s) / 2.0).ceil() + 0.001) as u64 - 1;
+    if end > start {
+        return end - start + 1;
+    }
+
+    return 0;
 }
 fn calculate_race(r: Race) -> Vec<u64> {
     let mut res = vec![];
